@@ -1,0 +1,7 @@
+<form id="loginForm" hx-post="." method="post" action=".">
+    {% csrf_token %}
+    {{form.as_p}}
+    <div class="buttons-grid grid">
+        <input type="submit" class="action-button button"  value="{{ button_text }}" />                
+    </div>
+</form>

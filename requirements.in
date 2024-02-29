@@ -1,0 +1,65 @@
+Django>=4.2,<4.3
+
+Pillow
+gunicorn
+easy-thumbnails
+django-extensions
+python-memcached
+pymemcache
+raven
+IPython
+pudb
+django-parler~=2.3
+redis
+
+git+https://github.com/cruncher/cmsplugin-filer@0c3755cad42fa713cc75017d0322270c888a90a3#egg=cmsplugin_filer
+boto3
+django-cms~=4.0
+djangocms-versioning
+djangocms-snippet
+django-eml-email-backend
+django-filer
+django-impersonate
+django-sekizai
+django-storages
+djangocms-text-ckeditor
+git+https://github.com/cruncher/fabric.git@1c60d21b37af4cdf2ce9cc6ef334cc7a978ee3e9#egg=fabric3
+psycopg2-binary
+python-dateutil
+requests
+sentry-sdk
+Werkzeug
+xlrd
+xlwt
+django-querycount
+django-rosetta
+
+pre-commit
+black
+
+# For django OTP admin
+django-otp
+qrcode
+
+# pretty console
+rich
+pytz
+
+
+# comms
+# djangocms-page-meta~=1.4.4 # Doesn't work with djangoCMS 4 (feb 2024)
+django-check-seo>=0.6.2
+unidecode
+
+# admin honeypot
+git+https://github.com/cruncher/django-admin-honeypot.git@1cf94e3d9809bb45e54fa83f9587a8c9bcc62fdf#egg=django-admin-honeypot
+
+
+git+https://github.com/halitcelik/django-passkeys.git@2f8439e9435a12bda3ca6779dffa22be4506089e#egg=django-passkeys
+
+# task scheduler
+django-tasks-scheduler~=1.3
+
+django-passkeys
+
+django-htmx
