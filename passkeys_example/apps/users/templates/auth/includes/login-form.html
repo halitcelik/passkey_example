@@ -1,7 +1,49 @@
-<form id="loginForm" hx-post="." method="post" action=".">
+<form id="loginForm" method="post" action=".">
     {% csrf_token %}
     {{form.as_p}}
+    <input id="passkeys" type="hidden" name="passkeys" >
     <div class="buttons-grid grid">
         <input type="submit" class="action-button button"  value="{{ button_text }}" />                
     </div>
 </form>
+    {% if auth_data %}
+    {{ auth_data|json_script:'auth-data' }}
+    {% endif %}
+<script>
+    
+    
+    {% if auth_data %}  
+        function startAuthn(options, conditionalUI) {
+            if (conditionalUI) {
+                options.mediation = 'conditional';
+                options.signal = window.conditionUIAbortSignal;
+            }
+            else
+                window.conditionUIAbortController.abort()
+            console.log(options)
+            return navigator.credentials.get(options);
+        }
+        function assertFunc(assertion){
+            pk_input = document.getElementById("passkeys");
+            if (pk_input.length == 0) {
+                console.error("Did you add the 'passkey' hidden input field")
+                return
+            }
+            pk_input.value = JSON.stringify(publicKeyCredentialToJSON(assertion));
+            let form = document.getElementById("loginForm")
+            if (form === null || form === undefined) {
+                console.error("Did you pass the correct form id to auth function")
+                return;
+            }
+            form.submit()
+        }
+        
+        var server_credentials = getAssertReq(publicKeyCredentialToJSON(
+            JSON.parse(document.getElementById("auth-data").textContent)
+        ));
+        startAuthn(server_credentials).then((assertion) => {
+            assertFunc(assertion);
+        } );
+    {% endif %}
+        
+</script>
