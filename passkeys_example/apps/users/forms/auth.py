@@ -14,13 +14,22 @@ from apps.cruncher.forms import CruncherFormRenderer
 
 UserModel = get_user_model()
 
-class UserLoginOptionsForm(CruncherFormRenderer):
+
+class LoginOptionsForm(CruncherFormRenderer):
     email = forms.EmailField(
         label=_("Votre adresse e-mail"),
         required=True,
-        widget=forms.EmailInput(attrs={"autofocus": True, "autocomplete":"username webauthn"}),
+        widget=forms.EmailInput(
+            attrs={"autofocus": True, "autocomplete": "username webauthn"}
+        ),
     )
-class UserLoginForm(UserLoginOptionsForm):
+
+
+class PasskeyLoginForm(LoginOptionsForm):
+    passkeys = forms.HiddenInput(attrs={"id": "passkeys", "name": "passkeys"})
+
+
+class PasswordLoginForm(LoginOptionsForm):
     password = forms.CharField(
         label=_("Mot de passe"),
         widget=forms.PasswordInput(),

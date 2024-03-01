@@ -1,23 +1,24 @@
-import json
-from django.contrib.auth import logout
+from passkeys.backend import PasskeyBackendException
+from passkeys.FIDO2 import (
+    auth_complete,
+    enable_json_mapping,
+    getServer,
+    getUserCredentials,
+)
+from passkeys.models import UserPasskey
+
+from django.conf import settings
+from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import PasswordResetView as DjangoPasswordResetView
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from ..forms.auth import UserLoginForm, UserLoginOptionsForm
-from passkeys.models import UserPasskey
-from passkeys.backend import PasskeyBackendException
-from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
 from django.urls import reverse
-from passkeys.FIDO2 import getServer, getUserCredentials, enable_json_mapping
-from django.contrib.auth import get_user_model
-from django.http import JsonResponse
-from fido2.utils import websafe_encode, websafe_decode
-from passkeys.FIDO2 import auth_complete
-from django.contrib.auth import login
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+
+from ..forms.auth import LoginOptionsForm, PasskeyLoginForm, PasswordLoginForm
 
 
 def login_view(request):
@@ -29,7 +30,7 @@ def login_view(request):
     if hasattr(request, "htmx") and request.htmx:
         template = "auth/includes/login-form.html"
     if request.method == "POST":
-        form = UserLoginForm(request.POST)
+        form = PasswordLoginForm(request.POST)
         if request.POST.get("password"):
             try:
                 if form.is_valid():
@@ -43,8 +44,9 @@ def login_view(request):
                     error=ValidationError(
                         mark_safe(
                             f"""
-                            Adresse email ou mot de passe erronée. 
-                            Pas de compte? <a href='{reverse("auth.signup")}'>S'inscrire</a>"""
+                            Adresse email ou mot de passe erronée.
+                            Pas de compte?
+                            <a href='{reverse("auth.signup")}'>S'inscrire</a>"""
                         )
                     ),
                 )
@@ -78,12 +80,17 @@ def login_view(request):
                     auth_data, state = server.authenticate_begin(credentials)
                     auth_data = dict(auth_data)
                     request.session["fido2_state"] = state
+                    form = PasskeyLoginForm(
+                        initial={"next": next_, "email": request.POST.get("email")}
+                    )
+                else:
+                    form = PasswordLoginForm(
+                        initial={"next": next_, "email": request.POST.get("email")}
+                    )
             button_text = _("Connexion")
-            form = UserLoginForm(
-                initial={"next": next_, "email": request.POST.get("email")}
-            )
+
     else:
-        form = UserLoginOptionsForm(initial={"next": next_})
+        form = LoginOptionsForm(initial={"next": next_})
 
     return render(
         request,
