@@ -18,7 +18,12 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from ..forms.auth import LoginOptionsForm, PasskeyLoginForm, PasswordLoginForm
+from ..forms.auth import (
+    LoginOptionsForm,
+    PasskeyLoginForm,
+    PasswordLoginForm,
+    SignupForm,
+)
 
 
 def login_view(request):
@@ -113,11 +118,18 @@ def logout_view(request):
 
 
 def signup_view(request):
+    form = SignupForm()
+    if request.method == "POST":
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("auth.login"))
     return render(
         request,
         "auth/signup.html",
         {
             "use_passkeys": "passkeys" in settings.INSTALLED_APPS,
+            "form": form,
         },
     )
 

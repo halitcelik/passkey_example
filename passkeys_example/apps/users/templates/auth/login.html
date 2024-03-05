@@ -4,10 +4,10 @@
 {% block headtitle %}{% trans "Connexion" %}{{block.super}}{% endblock headtitle %}
 
 {% block head %}
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
     <script>
         window.passkeysConfig = {
-            crossPlatform: "{{request.session.passkey.cross_platform|default:0}}",
+            else: "sodiajslkaj",
+            crossPlatform: parseInt("{{request.session.passkey.cross_platform|default:0}}"),
             enroll: "{{enroll}}",
             urls: {
                 home: "{% url 'passkeys:home' %}",
@@ -21,9 +21,8 @@
         }
     </script>
     <script src="{% static 'passkeys/js/script.js'%}"></script>
-
 {% endblock head %}
-    
+
 {% block body %}
 <main class="content-box box">
     <h1 class="center-align text-01">{% trans "Connexion" %}</h1>

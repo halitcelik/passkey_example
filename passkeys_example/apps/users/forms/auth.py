@@ -5,6 +5,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.forms import PasswordResetForm as DjangoPasswordResetForm
+from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.utils.translation import gettext_lazy as _
@@ -15,6 +16,12 @@ from apps.cruncher.forms import CruncherFormRenderer
 UserModel = get_user_model()
 
 
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = UserModel
+        fields = ("email",)
+
+
 class LoginOptionsForm(CruncherFormRenderer):
     email = forms.EmailField(
         label=_("Votre adresse e-mail"),
@@ -23,6 +30,7 @@ class LoginOptionsForm(CruncherFormRenderer):
             attrs={"autofocus": True, "autocomplete": "username webauthn"}
         ),
     )
+    next = forms.CharField(required=False, widget=forms.HiddenInput())
 
 
 class PasskeyLoginForm(LoginOptionsForm):
@@ -37,7 +45,6 @@ class PasswordLoginForm(LoginOptionsForm):
             _("Perdu votre mot de passe?")
         ),
     )
-    next = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def clean(self):
         email, password = (

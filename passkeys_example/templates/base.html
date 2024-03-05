@@ -66,10 +66,9 @@
 <body {% block bodytag %}{% endblock bodytag %}>
     {% cms_toolbar %}
     {% block body %}{% endblock body %}
-    
+
     {% block content %}{% endblock content %}
-    <a href="{% url 'passkeys:home' %}">Passkeys</a>
-        
+
 
     {% if debug %}<!-- scripts -->{% endif %}
     <script type="module" title="Module">
@@ -92,10 +91,10 @@
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <!-- Core plugin JavaScript-->
     <script src="{%static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
-    
+
     {% block endbodyscript %}
-        
+
     {% endblock endbodyscript %}
-        
+
 </body>
 </html>

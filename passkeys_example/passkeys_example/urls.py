@@ -24,6 +24,7 @@ urlpatterns = i18n_patterns(
     re_path(r"^admin/rosetta/", include("rosetta.urls")),
     re_path(r"^admin$", RedirectView.as_view(url="/admin/")),
     re_path(r"^admin/", admin.site.urls),
+    re_path(r"^$", TemplateView.as_view(template_name="demo.html")),
     re_path(r"^login/", login_view, name="auth.login"),
     re_path(r"^signup/", signup_view, name="auth.signup"),
     re_path(r"^logout/", logout_view, name="auth.logout"),

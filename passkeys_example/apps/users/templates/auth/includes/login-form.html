@@ -3,16 +3,16 @@
     {{form.as_p}}
     <input id="passkeys" type="hidden" name="passkeys" >
     <div class="buttons-grid grid">
-        <input type="submit" class="action-button button"  value="{{ button_text }}" />                
+        <input type="submit" class="action-button button"  value="{{ button_text }}" />
     </div>
 </form>
     {% if auth_data %}
     {{ auth_data|json_script:'auth-data' }}
     {% endif %}
 <script>
-    
-    
-    {% if auth_data %}  
+
+
+    {% if auth_data %}
         function startAuthn(options, conditionalUI) {
             if (conditionalUI) {
                 options.mediation = 'conditional';
@@ -29,7 +29,7 @@
                 console.error("Did you add the 'passkey' hidden input field")
                 return
             }
-            pk_input.value = JSON.stringify(publicKeyCredentialToJSON(assertion));
+            pk_input.value = JSON.stringify(djangoPasskey.credToJSON(assertion));
             let form = document.getElementById("loginForm")
             if (form === null || form === undefined) {
                 console.error("Did you pass the correct form id to auth function")
@@ -37,13 +37,13 @@
             }
             form.submit()
         }
-        
-        var server_credentials = getAssertReq(publicKeyCredentialToJSON(
+
+        var server_credentials = djangoPasskey.getAssertReq(djangoPasskey.credToJSON(
             JSON.parse(document.getElementById("auth-data").textContent)
         ));
         startAuthn(server_credentials).then((assertion) => {
             assertFunc(assertion);
         } );
     {% endif %}
-        
+
 </script>

@@ -1,4 +1,4 @@
-{% extends 'passkeys/base.html' %} {% load static sekizai_tags %} 
+{% extends 'passkeys/base.html' %} {% load static sekizai_tags %}
 
 {% block head %}{{block.super}}{% endblock head %}
 {% block body %}
@@ -6,26 +6,14 @@
     <!-- Page Content -->
     {% if registered %}
     <div class="alert alert-success">Registered Successfully</div>
+    {% else %}
+    <form action="." method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <div class="buttons-grid grid">
+            <input type="submit" class="action-button button"  value="Submit"/>
+        </div>
+    </form>
     {% endif %}
-    <h1>Welcome {{ request.user.username|default:"" }}!</h1>
-    <hr />
-    <div id="pk" class="alert alert-info" style="display: none">
-        Your device supports passkeys,
-        <a href="{%url 'passkeys:enroll'%}">Enroll</a>
-    </div>
 </div>
 {% endblock %}
-
-
-
-
-{% block endbodyscript %}
-<script>
-    function register_pk() {
-        document.querySelector("#pk").style.display = "block";
-    }
-    document.addEventListener("DOMContentLoaded", () => {
-        check_passkey(true, register_pk)
-    })
-</script>
-{% endblock endbodyscript %}
