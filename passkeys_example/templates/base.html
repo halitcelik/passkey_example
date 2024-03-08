@@ -45,12 +45,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff"-->
     <script src="{% static 'htmx.js'%}"></script>
-    <link href="{% static  'passkeys/css/bootstrap-toggle.min.css' %}" rel="stylesheet">
-    <script src="{% static 'passkeys/js/bootstrap-toggle.min.js'%}"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
-    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
     {% if request.user.is_superuser %}
     {# Warn admins about empty elements, buttons without type, images with no alt #}
     <link rel="stylesheet" href="{{STATIC_URL}}passkeys_example/classes/warn-not-cms.css" />
@@ -88,9 +83,6 @@
     </script-->
     {% endif %}
 
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="{%static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
 
     {% block endbodyscript %}
 

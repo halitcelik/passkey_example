@@ -1,14 +1,9 @@
 from passkeys.backend import PasskeyBackendException
-from passkeys.FIDO2 import (
-    auth_complete,
-    enable_json_mapping,
-    getServer,
-    getUserCredentials,
-)
+from passkeys.FIDO2 import auth_complete
 from passkeys.models import UserPasskey
 
 from django.conf import settings
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import PasswordResetView as DjangoPasswordResetView
 from django.core.exceptions import ValidationError
@@ -73,18 +68,12 @@ def login_view(request):
                         )
                         return HttpResponseRedirect(next_)
 
-                enable_json_mapping()
-                User = get_user_model()
-                credentials = getUserCredentials(request.POST.get(User.USERNAME_FIELD))
-                server = getServer(request)
                 user_passkey = UserPasskey.objects.filter(
                     user__email=request.POST.get("email"), enabled=True
                 ).first()
 
                 if user_passkey is not None:
-                    auth_data, state = server.authenticate_begin(credentials)
-                    auth_data = dict(auth_data)
-                    request.session["fido2_state"] = state
+                    request.session["base_username"] = request.POST.get("email")
                     form = PasskeyLoginForm(
                         initial={"next": next_, "email": request.POST.get("email")}
                     )

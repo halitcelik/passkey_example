@@ -1,4 +1,4 @@
-<form id="loginForm" method="post" action=".">
+<form id="loginForm" hx-post="." method="post" action=".">
     {% csrf_token %}
     {{form.as_p}}
     <input id="passkeys" type="hidden" name="passkeys" >
@@ -6,44 +6,27 @@
         <input type="submit" class="action-button button"  value="{{ button_text }}" />
     </div>
 </form>
-    {% if auth_data %}
-    {{ auth_data|json_script:'auth-data' }}
-    {% endif %}
+
+
 <script>
 
-
-    {% if auth_data %}
-        function startAuthn(options, conditionalUI) {
-            if (conditionalUI) {
-                options.mediation = 'conditional';
-                options.signal = window.conditionUIAbortSignal;
-            }
-            else
-                window.conditionUIAbortController.abort()
-            console.log(options)
-            return navigator.credentials.get(options);
+    document.addEventListener("DOMContentLoaded", () => {
+        const formElement = document.getElementById("loginForm");
+        const pkInput = formElement.querySelector("#passkeys");
+        if (window.location.protocol != 'https:') {
+            console.error("Passkeys must work under secure context");
+            return
         }
-        function assertFunc(assertion){
-            pk_input = document.getElementById("passkeys");
-            if (pk_input.length == 0) {
-                console.error("Did you add the 'passkey' hidden input field")
-                return
-            }
-            pk_input.value = JSON.stringify(djangoPasskey.credToJSON(assertion));
-            let form = document.getElementById("loginForm")
-            if (form === null || form === undefined) {
-                console.error("Did you pass the correct form id to auth function")
-                return;
-            }
-            form.submit()
+        if (!pkInput) {
+            console.error("Did you add the 'passkeys' hidden input field?");
+            return
         }
-
-        var server_credentials = djangoPasskey.getAssertReq(djangoPasskey.credToJSON(
-            JSON.parse(document.getElementById("auth-data").textContent)
-        ));
-        startAuthn(server_credentials).then((assertion) => {
-            assertFunc(assertion);
-        } );
-    {% endif %}
-
+        else if (!formElement) {
+            console.error("Did you pass the correct form id to auth function?");
+            return
+        }
+        else {
+            djangoPasskey.initialize();
+        }
+    })
 </script>
