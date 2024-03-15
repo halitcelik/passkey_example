@@ -112,7 +112,7 @@ def signup_view(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("auth.login"))
+            return HttpResponseRedirect(reverse("passkeys:login"))
     return render(
         request,
         "auth/signup.html",

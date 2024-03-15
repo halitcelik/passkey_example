@@ -139,7 +139,6 @@ INSTALLED_APPS = (
     "apps.news",
     "parler",
     "django_htmx",
-    "sslserver",
     # Djano-cms
     "cms",
     "treebeard",
@@ -241,10 +240,12 @@ if USE_PASSKEYS:
     AUTHENTICATION_BACKENDS += (
         "passkeys.backend.PasskeyModelBackend",
     )  # Change your authentication backend
-    FIDO_SERVER_ID = "0992-85-218-106-158.ngrok-free.app"
+    FIDO_SERVER_ID = "140a-85-218-106-158.ngrok-free.app"
     # Server rp id for FIDO2, it the full domain of your project
     FIDO_SERVER_NAME = "passkeys_example"
     PASSKEY_TIMEOUT = 12000
     import passkeys
+
+    DEFAULT_FROM_EMAIL = "info@cruncher.ch"
 
     KEY_ATTACHMENT = passkeys.Attachment.CROSS_PLATFORM
